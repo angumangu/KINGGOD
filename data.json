@@ -1,3 +1,16 @@
 {
-    "users": []
+  "users": [
+    {
+      "name": "Pih",
+      "origin": "You are a pig"
+    },
+    {
+      "name": "Btwey",
+      "origin": "You are a pig"
+    },
+    {
+      "name": "Indrajeet",
+      "origin": "You are a pig"
+    }
+  ]
 }
