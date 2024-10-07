@@ -2,65 +2,43 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const port = 80;
+const port = 80; // Set the port to 80
 
 // Middleware to parse JSON
 app.use(express.json());
 
-// Serve static files (HTML, CSS, JS)
+// Serve static files from the public directory
 app.use(express.static('public'));
 
-// Path to data.json (for storing users and their predictions)
-const dataFilePath = path.join(__dirname, 'data.json');
-
-// Path to predictions.txt (where predictions are stored)
+// Path to predictions.txt
 const predictionsFilePath = path.join(__dirname, 'predictions.txt');
-
-// Function to read data from data.json
-const readData = () => {
-    const data = fs.readFileSync(dataFilePath);
-    return JSON.parse(data);
-};
-
-// Function to write data to data.json
-const writeData = (data) => {
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-};
 
 // Function to read predictions from predictions.txt
 const readPredictions = () => {
-    const predictionsData = fs.readFileSync(predictionsFilePath, 'utf-8');
-    return predictionsData.split('\n').filter(prediction => prediction.trim() !== '');
+    const data = fs.readFileSync(predictionsFilePath, 'utf8');
+    return data.split('\n').filter(line => line.trim() !== ''); // Return non-empty lines
 };
 
-// Function to get a random prediction
-const getRandomPrediction = (predictions) => {
-    const randomIndex = Math.floor(Math.random() * predictions.length);
-    return predictions[randomIndex];
-};
-
-// API Endpoint to receive names and return a random prediction
+// Endpoint to receive names
 app.post('/submit-name', (req, res) => {
     const userName = req.body.name;
+    let responseMessage = '';
 
-    // Read predictions from the file
-    const predictions = readPredictions();
+    // Check for specific username
+    if (userName.toLowerCase() === 'anuj') {
+        responseMessage = "You are God; you build others' future.";
+    } else {
+        // Get random prediction
+        const predictions = readPredictions();
+        const randomIndex = Math.floor(Math.random() * predictions.length);
+        responseMessage = predictions[randomIndex]; // Get a random prediction
+    }
 
-    // Get a random prediction
-    const randomPrediction = getRandomPrediction(predictions);
-
-    // Read existing data
-    const data = readData();
-
-    // Save the new user and prediction
-    data.users.push({ name: userName, prediction: randomPrediction });
-    writeData(data);
-
-    // Send the random prediction as response
-    res.json({ message: randomPrediction });
+    // Send a response
+    res.json({ message: responseMessage });
 });
 
-// Start server on port 80
+// Start the server on port 80
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
