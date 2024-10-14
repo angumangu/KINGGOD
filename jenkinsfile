@@ -9,11 +9,11 @@ pipeline{
         stage("Docker remove image"){
             steps{
                 script{
-                    sh"docker rmi -f mrakbg/3tierscratch:latest || true"
-                    sh"docker build -t mrakbg/3tierscratch:latest ."
-                    sh"docker stop anuj || true"
-                    sh"docker rm anuj || true"
-                    sh"docker run -d --name anuj -p 3000:3000 mrakbg/3tierscratch:latest"
+                    sh"docker rmi -f mrakbg/3tierscratch:v4 || true"
+                    sh"docker build -t mrakbg/3tierscratch:v4 ."
+                    sh"docker push mrakbg/3tierscratch:v4"
+
+                    
                 }
 
             }
