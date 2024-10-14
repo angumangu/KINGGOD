@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const port = 80; // Set the port to 80
+const port = 3000; // Set the port to 80
 
 // Middleware to parse JSON
 app.use(express.json());
