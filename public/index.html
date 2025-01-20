@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover your daily prediction with a personalized touch!">
     <title>Daily Prediction</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <h1>Discover Your Daily Prediction!</h1>
-        <form id="predictionForm">
-            <input type="text" id="name" placeholder="Enter your name" required>
-            <button type="submit">Submit</button>
+        <form id="predictionForm" aria-label="Prediction Form">
+            <input type="text" id="name" placeholder="Enter your name">
+            <button type="submit">💀</button> <!-- Skull emoji used as submit button -->
         </form>
-        <p id="responseMessage"></p>
-    </div>
-
+        <p id="responseMessage" role="alert"></p>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
