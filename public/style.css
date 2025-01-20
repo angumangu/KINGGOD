@@ -11,7 +11,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background: url('images/13.jpg') no-repeat center center fixed; /* Add your devilish background image URL */
+    background: url('13.jpg') no-repeat center center fixed; /* Add your devilish background image URL */
     background-size: cover;
     animation: backgroundMove 10s infinite linear; /* Motion effect */
 }
