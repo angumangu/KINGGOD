@@ -1,51 +1,98 @@
+/* Add Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Rock+Salt&family=Nosifer&family=Bungee&display=swap');
+
+/* Body Styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Creepster', sans-serif; /* Default font: Creepster */
+    background-color: #1a1a1a; /* Dark background */
+    color: #fff; /* White text */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    background: url('images/13.jpg') no-repeat center center fixed; /* Add your devilish background image URL */
+    background-size: cover;
+    animation: backgroundMove 10s infinite linear; /* Motion effect */
 }
 
+/* Animation for moving background */
+@keyframes backgroundMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+/* Container Styling */
 .container {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 15px;
     text-align: center;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); /* Red glow */
+    animation: pulse 1s infinite alternate; /* Glowing effect */
+    width: 90%;
+    max-width: 400px; /* Ensure it stays centered */
 }
 
+/* Glowing pulse animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 40px rgba(255, 0, 0, 1);
+    }
+}
+
+/* Heading Styling with Nosifer */
 h1 {
+    color: #f44336; /* Red color for title */
+    font-size: 32px; /* Reduced font size */
+    font-family: 'Nosifer', cursive; /* Nosifer font for headings */
     margin-bottom: 20px;
-    color: #333;
 }
 
+/* Input Styling with Rock Salt */
 input[type="text"] {
-    padding: 10px;
+    padding: 12px;
     width: 80%;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px; /* Reduced size */
+    color: #fff;
+    background-color: #333;
+    font-family: 'Rock Salt', cursive; /* Rock Salt font for input */
+    transition: border 0.3s ease-in-out;
 }
 
+/* Red border when input is invalid */
+input[type="text"].invalid {
+    border-color: #ff0000; /* Red border */
+}
+
+/* Skull emoji for submit button (replacing button) */
 button {
-    padding: 10px 20px;
-    background-color: #28a745;
+    background-color: transparent;
     border: none;
-    border-radius: 4px;
     color: white;
-    font-size: 16px;
+    font-size: 48px; /* Larger skull emoji */
     cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    font-family: 'Bungee', sans-serif; /* Bungee font for emoji */
 }
 
 button:hover {
-    background-color: #218838;
+    transform: scale(1.2); /* Scale the emoji on hover */
 }
 
+/* Response Message */
 p#responseMessage {
     margin-top: 20px;
-    font-size: 18px;
-    color: #555;
+    font-size: 16px; /* Reduced size */
+    color: #fff;
 }
