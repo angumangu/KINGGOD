@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const fs = require('fs');
 const path = require('path');
 require('dotenv').config();  // To load credentials from .env
 const app = express();
@@ -11,26 +11,22 @@ app.use(express.json());
 // Serve static files from the public directory
 app.use(express.static('public'));
 
-// Set up MySQL connection using .env credentials
-const db = mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'kinggod'
-});
-
 // In-memory storage for predictions
 const predictionCache = {};
 
-// Function to get random prediction from the database
+// Function to read the contents of predictions.txt and return a random prediction
 const getRandomPrediction = (callback) => {
-    const query = 'SELECT prediction FROM predictions ORDER BY RAND() LIMIT 1';
-    db.query(query, (err, results) => {
+    // Read predictions.txt file
+    fs.readFile('predictions.txt', 'utf8', (err, data) => {
         if (err) {
             callback(err, null);
             return;
         }
-        callback(null, results[0].prediction); // Return the random prediction
+
+        // Split the file content by newline and get a random prediction
+        const predictions = data.split('\n').filter(line => line.trim() !== '');
+        const randomPrediction = predictions[Math.floor(Math.random() * predictions.length)];
+        callback(null, randomPrediction); // Return the random prediction
     });
 };
 
@@ -48,7 +44,7 @@ const getValidPrediction = (userName, callback) => {
         }
     }
 
-    // If no valid prediction, fetch a new one
+    // If no valid prediction, fetch a new one from the file
     getRandomPrediction((err, prediction) => {
         if (err) {
             callback(err, null);
