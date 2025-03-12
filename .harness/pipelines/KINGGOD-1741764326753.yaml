@@ -74,35 +74,68 @@ pipeline:
                     caching: true
                   timeout: ""
                   type: BuildAndPushDockerRegistry
-              - step:
-                  type: AquaTrivy
-                  name: AquaTrivy_1
-                  identifier: AquaTrivy_1
-                  spec:
-                    mode: orchestration
-                    config: default
-                    target:
-                      type: container
-                      detection: auto
-                    advanced:
-                      log:
-                        level: info
-                    privileged: true
-                    image:
-                      type: docker_v2
-                      tag: latest
-                      name: mrakbg/world
-              - step:
-                  type: Run
-                  name: Run_3
-                  identifier: Run_3
-                  spec:
-                    shell: Sh
-                    command: |-
-                      docker run -d --name test-container -p 3000:3000 mrakbg/world:latest
-                      sleep 5
-                      curl -f http://localhost:3000 || exit 1
-                  description: testing
+              - parallel:
+                  - step:
+                      type: AquaTrivy
+                      name: AquaTrivy_1
+                      identifier: AquaTrivy_1
+                      spec:
+                        mode: orchestration
+                        config: default
+                        target:
+                          type: container
+                          detection: auto
+                        advanced:
+                          log:
+                            level: info
+                        privileged: true
+                        image:
+                          type: docker_v2
+                          tag: latest
+                          name: mrakbg/world
+                  - step:
+                      type: Zap
+                      name: Zap_1
+                      identifier: Zap_1
+                      spec:
+                        target:
+                          detection: auto
+                          type: instance
+                        advanced:
+                          log:
+                            level: info
+                          args: {}
+                        mode: orchestration
+                        config: default
+                        instance:
+                          domain: https://anvil.works/learn/examples/simple-website-guide
+                          protocol: https
+              - parallel:
+                  - step:
+                      type: Run
+                      name: Run_3
+                      identifier: Run_3
+                      spec:
+                        shell: Sh
+                        command: |-
+                          docker run -d --name test-container -p 3000:3000 mrakbg/world:latest
+                          sleep 5
+                          curl -f http://localhost:3000 || exit 1
+                      description: testing
+                  - step:
+                      type: Checkov
+                      name: Checkov_1
+                      identifier: Checkov_1
+                      spec:
+                        target:
+                          detection: auto
+                          type: repository
+                        advanced:
+                          log:
+                            level: info
+                          args: {}
+                        mode: orchestration
+                        config: default
           platform:
             os: Linux
             arch: Amd64
