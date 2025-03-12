@@ -1,0 +1,5 @@
+service:
+  name: dev-service
+  identifier: devservice
+  orgIdentifier: default
+  projectIdentifier: default_project
