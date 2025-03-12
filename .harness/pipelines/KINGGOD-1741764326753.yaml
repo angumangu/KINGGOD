@@ -1,6 +1,6 @@
 pipeline:
   identifier: Build_mrakbg_KINGGOD_1741764335123
-  name: Build KINGGOD
+  name: Dockerpush-Anuj
   orgIdentifier: default
   projectIdentifier: default_project
   properties:
@@ -52,3 +52,4 @@ pipeline:
             type: Cloud
             spec: {}
         type: CI
+  tags: {}
