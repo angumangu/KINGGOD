@@ -1,0 +1,53 @@
+pipeline:
+  identifier: Build_mrakbg_KINGGOD_1741764335123
+  name: Build KINGGOD
+  orgIdentifier: default
+  projectIdentifier: default_project
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.Github
+        repoName: mrakbg/KINGGOD
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          caching:
+            enabled: true
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: installdependencies
+                  name: install dependencies
+                  spec:
+                    command: npm install
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: test
+                  name: test
+                  spec:
+                    command: npm run test
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    caching: true
+                    connectorRef: <+input>
+                    repo: hello/world
+                    tags:
+                      - latest
+                  timeout: ""
+                  type: BuildAndPushDockerRegistry
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI
