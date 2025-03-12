@@ -38,7 +38,7 @@ pipeline:
                   identifier: dockerbuild
                   name: docker_build
                   spec:
-                    connectorRef: <+input>
+                    connectorRef: Dockerconnector
                     repo: mrakbg/world
                     tags:
                       - latest
