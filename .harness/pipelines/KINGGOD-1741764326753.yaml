@@ -26,14 +26,43 @@ pipeline:
                     command: npm install
                   timeout: ""
                   type: Run
-              - step:
-                  identifier: test
-                  name: test
-                  spec:
-                    shell: Sh
-                    command: npm run test || true
-                  timeout: ""
-                  type: Run
+              - parallel:
+                  - step:
+                      identifier: test
+                      name: test
+                      spec:
+                        shell: Sh
+                        command: npm run test || true
+                      timeout: ""
+                      type: Run
+                  - step:
+                      type: Owasp
+                      name: Owasp_1
+                      identifier: Owasp_1
+                      spec:
+                        target:
+                          detection: auto
+                          type: repository
+                        advanced:
+                          log:
+                            level: info
+                          args: {}
+                        mode: orchestration
+                        config: default
+                  - step:
+                      type: OsvScanner
+                      name: OsvScanner_1
+                      identifier: OsvScanner_1
+                      spec:
+                        target:
+                          detection: auto
+                          type: repository
+                        advanced:
+                          log:
+                            level: info
+                          args: {}
+                        mode: orchestration
+                        config: default
               - step:
                   identifier: dockerbuild
                   name: docker_build
@@ -45,6 +74,24 @@ pipeline:
                     caching: true
                   timeout: ""
                   type: BuildAndPushDockerRegistry
+              - step:
+                  type: AquaTrivy
+                  name: AquaTrivy_1
+                  identifier: AquaTrivy_1
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: container
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                    privileged: true
+                    image:
+                      type: docker_v2
+                      tag: latest
+                      name: mrakbg/world
               - step:
                   type: Run
                   name: Run_3
