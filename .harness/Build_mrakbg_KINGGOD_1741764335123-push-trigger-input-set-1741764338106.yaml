@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_mrakbg_KINGGOD_1741764335123-push-trigger-input-set
+  identifier: Build_mrakbg_KINGGOD_1741764335123pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_mrakbg_KINGGOD_1741764335123
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
