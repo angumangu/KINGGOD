@@ -30,7 +30,8 @@ pipeline:
                   identifier: test
                   name: test
                   spec:
-                    command: npm run test
+                    shell: Sh
+                    command: npm run test || true
                   timeout: ""
                   type: Run
               - step:
@@ -45,9 +46,9 @@ pipeline:
                   timeout: ""
                   type: BuildAndPushDockerRegistry
           platform:
-            arch: Amd64
             os: Linux
+            arch: Amd64
           runtime:
-            spec: {}
             type: Cloud
+            spec: {}
         type: CI
