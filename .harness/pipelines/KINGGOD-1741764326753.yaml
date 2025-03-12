@@ -52,9 +52,9 @@ pipeline:
                   spec:
                     shell: Sh
                     command: |-
-                      docker run -d --name test-container -p 8080:8080 mrakbg/world:latest
+                      docker run -d --name test-container -p 3000:3000 mrakbg/world:latest
                       sleep 5
-                      curl -f http://localhost:8080 || exit 1
+                      curl -f http://localhost:3000 || exit 1
                   description: testing
           platform:
             os: Linux
