@@ -1,4 +1,4 @@
-# Setup Instructions for PredictYourDay Appp
+# Setup Instructions for PredictYourDay App
 
 This guide explains how to set up the PredictYourDay app, pull its Docker image, serve it locally or on a server, configure a domain, set up a reverse proxy with Nginx, and secure the application with HTTPS using SSL certificates.
 
