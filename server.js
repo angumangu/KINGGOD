@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();  // To load credentials from .env
+const client = require('prom-client'); // Prometheus client
+
 const app = express();
 const port = 3000;
 
@@ -11,22 +13,52 @@ app.use(express.json());
 // Serve static files from the public directory
 app.use(express.static('public'));
 
+// ------------------- Prometheus Metrics Setup -------------------
+
+// Create a Registry to register metrics
+const register = new client.Registry();
+
+// Collect default system metrics (CPU, memory, etc.)
+client.collectDefaultMetrics({ register });
+
+// Custom metric: HTTP request counter
+const httpRequestCounter = new client.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route', 'status'],
+});
+register.registerMetric(httpRequestCounter);
+
+// Middleware to increment request count
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        httpRequestCounter.labels(req.method, req.path, res.statusCode.toString()).inc();
+    });
+    next();
+});
+
+// Endpoint for Prometheus to scrape metrics
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
+
+// ---------------------------------------------------------------
+
 // In-memory storage for predictions
 const predictionCache = {};
 
 // Function to read the contents of predictions.txt and return a random prediction
 const getRandomPrediction = (callback) => {
-    // Read predictions.txt file
     fs.readFile('predictions.txt', 'utf8', (err, data) => {
         if (err) {
             callback(err, null);
             return;
         }
 
-        // Split the file content by newline and get a random prediction
         const predictions = data.split('\n').filter(line => line.trim() !== '');
         const randomPrediction = predictions[Math.floor(Math.random() * predictions.length)];
-        callback(null, randomPrediction); // Return the random prediction
+        callback(null, randomPrediction);
     });
 };
 
@@ -38,20 +70,17 @@ const getValidPrediction = (userName, callback) => {
         const { prediction, timestamp } = predictionCache[userName];
         const timeDiff = currentTime - timestamp;
 
-        // If prediction is less than 24 hours old, return it
-        if (timeDiff < 24 * 60 * 60 * 1000) { // 24 hours in milliseconds
+        if (timeDiff < 24 * 60 * 60 * 1000) {
             return callback(null, prediction);
         }
     }
 
-    // If no valid prediction, fetch a new one from the file
     getRandomPrediction((err, prediction) => {
         if (err) {
             callback(err, null);
             return;
         }
 
-        // Store the new prediction and timestamp
         predictionCache[userName] = {
             prediction,
             timestamp: currentTime
@@ -65,13 +94,11 @@ app.post('/submit-name', (req, res) => {
     const userName = req.body.name;
     let responseMessage = '';
 
-    // Check for specific username
     if (userName.toLowerCase() === 'anuj') {
         responseMessage = "You are God; you build others' future.";
         return res.json({ message: responseMessage });
     }
 
-    // Check for valid prediction or generate a new one
     getValidPrediction(userName, (err, prediction) => {
         if (err) {
             responseMessage = "Error fetching prediction.";
@@ -86,3 +113,4 @@ app.post('/submit-name', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
